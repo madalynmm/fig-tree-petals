@@ -6,8 +6,8 @@ This application uses an open weather API to retrieve the current weather for an
 
 ## Application Screenshot:
 
-![Daily Appointment Scheduler.](./assets/images/Screenshot%20(24).png)
+![Weather Dashboard.](./assets/images/Screenshot%20(24).png)
 
 ## Link to Deployed Application: 
 
-[Coding Quiz](https://madalynmm.github.io/elk-filled-snow/)
+[Weather Dashboard](https://madalynmm.github.io/fig-tree-petals/)
