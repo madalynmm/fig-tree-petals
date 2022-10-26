@@ -1,7 +1,7 @@
 // Global Variables
 var searchHistory = [];
 var weatherApiRootUrl = 'https://api.openweathermap.org';
-var weatherApiKey = 'd91f911bcf2c0f925fb6535547a5ddc9';
+var weatherApiKey = 'd27cce2c13515231a9753bbcdaa059f1';
 
 // DOM element references
 var searchForm = document.querySelector('#search-form');
@@ -9,6 +9,7 @@ var searchInput = document.querySelector('#search-input');
 var todayContainer = document.querySelector('#today');
 var forecastContainer = document.querySelector('#forecast');
 var searchHistoryContainer = document.querySelector('#history');
+var searchBtn = document.querySelector('#search-button');
 
 // Fetches weather data for given location from the Weather Geolocation endpoint;
 // then, calls functions to display current and forecast weather data.
@@ -22,16 +23,45 @@ function renderItems(city, data) {
     renderForecast(data.daily, data.timezone);
 }
 
+function fetchCoordinates(cityName) {
+    var geoApiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${cityName}&limit=1&appid=${weatherApiKey}`;
+
+    fetch(geoApiUrl)
+        .then(
+            function (res) {
+                return res.json();
+            }
+        )
+        .then(
+            function (coordinateData) {
+                console.log("Coordinates: ", coordinateData);
+                var [cityInfo] = coordinateData;
+                fetchWeather({
+                    lat: cityInfo.lat,
+                    lon: cityInfo.lon,
+                    name: cityInfo.name
+                });
+            }
+        )
+        .catch(
+            function (err) {
+                console.error(err);
+            }
+        );
+}
+
 function fetchWeather(location) {
-    var { lat } = location;
-    var { lon } = location;
+    console.log(location);
+    
+    var lat = location.lat;
+    var lon = location.lon;
     var city = location.name;
-    var apiUrl = `${weatherApiRootUrl}/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=${weatherApiKey}`;
+    var apiUrl = `${weatherApiRootUrl}/data/3.0/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=${weatherApiKey}`;
 
     fetch(apiUrl)
         .then(
             function (res) {
-            return res.json();
+                return res.json();
             }
         )
         .then(
@@ -42,12 +72,30 @@ function fetchWeather(location) {
         )
         .catch(
             function (err) {
-            console.error(err);
+                console.error(err);
             }
         );
 }
 
-// Function to display 5 day forecast.
+searchBtn.addEventListener('click', function(event) {
+    event.preventDefault();
+    var cityInput = searchInput.value;
+    console.log("City Input: ", cityInput);
+    fetchCoordinates(cityInput);
+    //fetchWeather();
+});
+
+// Function to display today's weather:
+// function renderCurrentWeather(city, currentForecast, timezone) {
+
+// }
+
+// function renderCurrentWeatherCard(city, forecast) {
+
+// }
+
+
+// Function to display 5 day forecast:
 function renderForecast(dailyForecast, timezone) {
     // Create unix timestamps for start and end of 5 day forecast
     var startDt = dayjs().tz(timezone).add(1, 'day').startOf('day').unix();
@@ -116,9 +164,3 @@ function renderForecastCard(forecast, timezone) {
 
     forecastContainer.append(col);
 }
-
-fetchWeather({
-    lat: 10,
-    lon: 10,
-    name: "San Diego"
-});
