@@ -6,7 +6,7 @@ This application uses an open weather API to retrieve the current weather for an
 
 ## Application Screenshot:
 
-![Weather Dashboard.](./assets/images/WeatherForecastScreenshot.png)
+![Weather Dashboard.](./assets/images/Screenshot%20(26).png)
 
 ## Link to Deployed Application: 
 
